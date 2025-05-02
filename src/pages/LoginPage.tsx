@@ -3,7 +3,7 @@ import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Lock, User } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
@@ -42,13 +42,16 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary">RaporAkışı</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">AI Destekli Analitik Platformu</p>
+        <div className="flex justify-center mb-8">
+          <img 
+            src="/lovable-uploads/8640358c-121b-4061-aa82-889ed0f5c575.png" 
+            alt="Claridad Logo" 
+            className="h-16 w-auto"
+          />
         </div>
         
         <Card>
-          <CardHeader>
+          <CardHeader className="text-center">
             <CardTitle className="text-2xl">Hoş Geldiniz</CardTitle>
             <CardDescription>Hesabınıza giriş yapın</CardDescription>
           </CardHeader>
