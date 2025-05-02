@@ -110,25 +110,6 @@ export default function LoginPage() {
               </div>
             </form>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <div className="relative w-full">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-background px-2 text-muted-foreground">
-                  veya
-                </span>
-              </div>
-            </div>
-            
-            <div className="text-center text-sm">
-              Hesabınız yok mu?{" "}
-              <a href="#" className="text-primary hover:underline font-medium">
-                Kayıt ol
-              </a>
-            </div>
-          </CardFooter>
         </Card>
       </div>
     </div>
