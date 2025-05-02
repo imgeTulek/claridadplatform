@@ -1,9 +1,12 @@
 
-import { Bell, Search } from 'lucide-react';
+import { Bell, Moon, Search, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTheme } from '@/hooks/use-theme';
 
 export function Header() {
+  const { theme, setTheme } = useTheme();
+
   return (
     <header className="border-b bg-white dark:bg-gray-900 py-2 px-6">
       <div className="flex items-center justify-between">
@@ -25,9 +28,13 @@ export function Header() {
           </Button>
           
           <div className="border-l pl-4 flex items-center gap-2">
-            <span className="text-sm">Switch Theme</span>
-            <Button variant="outline" size="sm">
-              🌙
+            <span className="text-sm">Theme</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
           </div>
         </div>

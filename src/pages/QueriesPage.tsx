@@ -7,6 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Play, Lightbulb, ChevronsDown, ChevronsUp, BookOpen, Save, Download } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+import { 
+  ChartContainer, 
+  ChartTooltip,
+  ChartTooltipContent
+} from '@/components/ui/chart';
+import { generateSqlFromNaturalLanguage } from '@/utils/nlToSql';
 
 const sampleData = [
   { name: 'Jan', value: 400 },
@@ -18,11 +25,50 @@ const sampleData = [
   { name: 'Jul', value: 1000 },
 ];
 
+// Sample data for different visualizations
+const dailySalesData = [
+  { day: '01/01', sales: 120 },
+  { day: '01/02', sales: 180 },
+  { day: '01/03', sales: 250 },
+  { day: '01/04', sales: 300 },
+  { day: '01/05', sales: 280 },
+  { day: '01/06', sales: 220 },
+  { day: '01/07', sales: 170 },
+];
+
+const productRevenueData = [
+  { name: 'Product A', value: 12000 },
+  { name: 'Product B', value: 8000 },
+  { name: 'Product C', value: 15000 },
+  { name: 'Product D', value: 6000 },
+  { name: 'Product E', value: 9000 },
+];
+
+const chartConfig = {
+  sales: {
+    label: 'Sales',
+    theme: {
+      light: '#3b82f6',
+      dark: '#60a5fa',
+    },
+  },
+  revenue: {
+    label: 'Revenue',
+    theme: {
+      light: '#10b981',
+      dark: '#34d399',
+    },
+  },
+};
+
 export default function QueriesPage() {
   const [query, setQuery] = useState("-- Write your SQL query here\nSELECT * FROM users WHERE created_at > '2023-01-01' LIMIT 10;");
   const [naturalLanguage, setNaturalLanguage] = useState("");
   const [showResults, setShowResults] = useState(true);
   const [activeChart, setActiveChart] = useState("area");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedSqlExplanation, setGeneratedSqlExplanation] = useState("");
+  const [activeDataset, setActiveDataset] = useState("default");
   
   const { toast } = useToast();
   
@@ -33,7 +79,7 @@ export default function QueriesPage() {
     });
   };
   
-  const handleGenerateSQL = () => {
+  const handleGenerateSQL = async () => {
     if (naturalLanguage.trim() === "") {
       toast({
         title: "Empty input",
@@ -43,13 +89,49 @@ export default function QueriesPage() {
       return;
     }
     
-    // In a real app, this would call an AI service to generate SQL
-    setQuery(`-- Generated from: ${naturalLanguage}\nSELECT user_id, name, email, signup_date\nFROM users\nWHERE signup_date > '2023-01-01'\nORDER BY signup_date DESC\nLIMIT 10;`);
+    setIsGenerating(true);
     
-    toast({
-      title: "SQL generated",
-      description: "SQL query generated from your description.",
-    });
+    try {
+      // Call the utility function to generate SQL
+      const result = await generateSqlFromNaturalLanguage(naturalLanguage);
+      
+      setQuery(result.sql);
+      setGeneratedSqlExplanation(result.explanation || "");
+      
+      // Set active dataset based on the query content
+      if (result.sql.toLowerCase().includes('sales')) {
+        setActiveDataset("sales");
+      } else if (result.sql.toLowerCase().includes('revenue') || result.sql.toLowerCase().includes('product')) {
+        setActiveDataset("revenue");
+      } else {
+        setActiveDataset("default");
+      }
+      
+      toast({
+        title: "SQL generated",
+        description: "SQL query generated from your description.",
+      });
+    } catch (error) {
+      toast({
+        title: "Generation failed",
+        description: "Failed to generate SQL. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // Get the appropriate data for visualization based on the active dataset
+  const getVisualizationData = () => {
+    switch (activeDataset) {
+      case "sales":
+        return dailySalesData;
+      case "revenue":
+        return productRevenueData;
+      default:
+        return sampleData;
+    }
   };
 
   return (
@@ -57,7 +139,7 @@ export default function QueriesPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold mb-2">Query Builder</h1>
-          <p className="text-gray-500">Write SQL or use AI to generate queries from natural language</p>
+          <p className="text-gray-500 dark:text-gray-400">Write SQL or use AI to generate queries from natural language</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -72,13 +154,12 @@ export default function QueriesPage() {
                   
                   <TabsContent value="sql" className="space-y-4 pt-4">
                     <div>
-                      <textarea 
-                        className="query-editor"
+                      <Textarea 
+                        className="font-mono text-sm h-64 bg-gray-50 dark:bg-gray-800"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        rows={8}
                         placeholder="Write your SQL query here..."
-                      ></textarea>
+                      />
                     </div>
                     
                     <div className="flex justify-between">
@@ -102,13 +183,12 @@ export default function QueriesPage() {
                   
                   <TabsContent value="natural" className="space-y-4 pt-4">
                     <div>
-                      <textarea 
-                        className="query-editor"
+                      <Textarea 
+                        className="h-24 bg-gray-50 dark:bg-gray-800"
                         value={naturalLanguage}
                         onChange={(e) => setNaturalLanguage(e.target.value)}
-                        rows={3}
-                        placeholder="Describe what data you want in plain English..."
-                      ></textarea>
+                        placeholder="Describe what data you want in plain English... (e.g., 'Show me the most active users', 'Get sales from last month', 'Show top products by revenue')"
+                      />
                     </div>
                     
                     <div className="flex justify-between">
@@ -116,8 +196,9 @@ export default function QueriesPage() {
                         variant="default" 
                         className="gap-2"
                         onClick={handleGenerateSQL}
+                        disabled={isGenerating}
                       >
-                        <Lightbulb className="h-4 w-4" /> Generate SQL
+                        <Lightbulb className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Generate SQL'}
                       </Button>
                     </div>
                     
@@ -127,6 +208,12 @@ export default function QueriesPage() {
                         <div className="bg-muted p-3 rounded-md">
                           <pre className="text-xs whitespace-pre-wrap">{query}</pre>
                         </div>
+                        
+                        {generatedSqlExplanation && (
+                          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+                            <p className="text-xs text-blue-700 dark:text-blue-300">{generatedSqlExplanation}</p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </TabsContent>
@@ -208,31 +295,52 @@ export default function QueriesPage() {
               <CardContent>
                 <div className="h-[300px]">
                   {activeChart === 'area' ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={sampleData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Area type="monotone" dataKey="value" stroke="#3b82f6" fillOpacity={1} fill="url(#colorValue)" />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                    <ChartContainer config={chartConfig} className="h-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={getVisualizationData()} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="var(--color-sales, #3b82f6)" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="var(--color-sales, #3b82f6)" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis 
+                            dataKey={activeDataset === "sales" ? "day" : "name"} 
+                            tick={{ fill: 'var(--color-foreground)' }} 
+                          />
+                          <YAxis tick={{ fill: 'var(--color-foreground)' }} />
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <Area 
+                            type="monotone" 
+                            dataKey={activeDataset === "sales" ? "sales" : "value"} 
+                            name={activeDataset === "revenue" ? "revenue" : activeDataset === "sales" ? "sales" : "value"}
+                            stroke="var(--color-sales, #3b82f6)" 
+                            fillOpacity={1} 
+                            fill="url(#colorValue)" 
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </ChartContainer>
                   ) : (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={sampleData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="value" fill="#3b82f6" />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <ChartContainer config={chartConfig} className="h-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={getVisualizationData()} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis 
+                            dataKey={activeDataset === "sales" ? "day" : "name"} 
+                            tick={{ fill: 'var(--color-foreground)' }} 
+                          />
+                          <YAxis tick={{ fill: 'var(--color-foreground)' }} />
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <Bar 
+                            dataKey={activeDataset === "sales" ? "sales" : "value"} 
+                            name={activeDataset === "revenue" ? "revenue" : activeDataset === "sales" ? "sales" : "value"}
+                            fill="var(--color-sales, #3b82f6)" 
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </ChartContainer>
                   )}
                 </div>
               </CardContent>
