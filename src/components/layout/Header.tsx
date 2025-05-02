@@ -15,7 +15,7 @@ export function Header() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
               type="search" 
-              placeholder="Search..." 
+              placeholder="Ara..." 
               className="pl-8 w-full bg-gray-50 dark:bg-gray-800"
             />
           </div>
@@ -28,7 +28,7 @@ export function Header() {
           </Button>
           
           <div className="border-l pl-4 flex items-center gap-2">
-            <span className="text-sm">Theme</span>
+            <span className="text-sm">Tema</span>
             <Button
               variant="outline"
               size="sm"
