@@ -40,7 +40,7 @@ export default function LoginPage() {
   return <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
-          <img src="/lovable-uploads/8640358c-121b-4061-aa82-889ed0f5c575.png" alt="Claridad Logo" className="h-16 w-auto object-fill" />
+          <img src="/lovable-uploads/8640358c-121b-4061-aa82-889ed0f5c575.png" alt="Claridad Logo" className="h-16 w-auto object-contain" />
         </div>
         
         <Card>
