@@ -45,9 +45,8 @@ export function AppSidebar() {
 
   return (
     <div className="bg-sidebar h-screen w-64 p-4 text-sidebar-foreground flex flex-col">
-      <div className="mb-8">
-        <h2 className="text-xl font-bold text-white mb-1">RaporAkışı</h2>
-        <p className="text-sm text-gray-400">AI Destekli Analitik</p>
+      <div className="mb-8 flex justify-center">
+        <img src="/lovable-uploads/8640358c-121b-4061-aa82-889ed0f5c575.png" alt="Claridad Logo" className="h-12 object-contain" />
       </div>
       
       <div className="mb-6">

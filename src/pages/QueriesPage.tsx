@@ -8,6 +8,7 @@ import { Play, Lightbulb, ChevronsDown, ChevronsUp, BookOpen, Save, Download } f
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
+import { PromptToSqlAgent } from '@/components/PromptToSqlAgent';
 import { 
   ChartContainer, 
   ChartTooltip,
@@ -16,13 +17,13 @@ import {
 import { generateSqlFromNaturalLanguage } from '@/utils/nlToSql';
 
 const sampleData = [
-  { name: 'Jan', value: 400 },
-  { name: 'Feb', value: 300 },
+  { name: 'Oca', value: 400 },
+  { name: 'Şub', value: 300 },
   { name: 'Mar', value: 600 },
-  { name: 'Apr', value: 800 },
+  { name: 'Nis', value: 800 },
   { name: 'May', value: 500 },
-  { name: 'Jun', value: 900 },
-  { name: 'Jul', value: 1000 },
+  { name: 'Haz', value: 900 },
+  { name: 'Tem', value: 1000 },
 ];
 
 // Sample data for different visualizations
@@ -37,23 +38,23 @@ const dailySalesData = [
 ];
 
 const productRevenueData = [
-  { name: 'Product A', value: 12000 },
-  { name: 'Product B', value: 8000 },
-  { name: 'Product C', value: 15000 },
-  { name: 'Product D', value: 6000 },
-  { name: 'Product E', value: 9000 },
+  { name: 'Ürün A', value: 12000 },
+  { name: 'Ürün B', value: 8000 },
+  { name: 'Ürün C', value: 15000 },
+  { name: 'Ürün D', value: 6000 },
+  { name: 'Ürün E', value: 9000 },
 ];
 
 const chartConfig = {
   sales: {
-    label: 'Sales',
+    label: 'Satışlar',
     theme: {
       light: '#3b82f6',
       dark: '#60a5fa',
     },
   },
   revenue: {
-    label: 'Revenue',
+    label: 'Gelir',
     theme: {
       light: '#10b981',
       dark: '#34d399',
@@ -62,28 +63,29 @@ const chartConfig = {
 };
 
 export default function QueriesPage() {
-  const [query, setQuery] = useState("-- Write your SQL query here\nSELECT * FROM users WHERE created_at > '2023-01-01' LIMIT 10;");
+  const [query, setQuery] = useState("-- SQL sorgunuzu buraya yazın\nSELECT * FROM users WHERE created_at > '2023-01-01' LIMIT 10;");
   const [naturalLanguage, setNaturalLanguage] = useState("");
   const [showResults, setShowResults] = useState(true);
   const [activeChart, setActiveChart] = useState("area");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedSqlExplanation, setGeneratedSqlExplanation] = useState("");
   const [activeDataset, setActiveDataset] = useState("default");
+  const [activeTab, setActiveTab] = useState("sql");
   
   const { toast } = useToast();
   
   const handleRunQuery = () => {
     toast({
-      title: "Query executed",
-      description: "Your query has been executed successfully.",
+      title: "Sorgu çalıştırıldı",
+      description: "Sorgunuz başarıyla çalıştırıldı.",
     });
   };
   
   const handleGenerateSQL = async () => {
     if (naturalLanguage.trim() === "") {
       toast({
-        title: "Empty input",
-        description: "Please enter a natural language query.",
+        title: "Boş sorgu",
+        description: "Lütfen doğal dilde bir sorgu girin.",
         variant: "destructive"
       });
       return;
@@ -99,22 +101,23 @@ export default function QueriesPage() {
       setGeneratedSqlExplanation(result.explanation || "");
       
       // Set active dataset based on the query content
-      if (result.sql.toLowerCase().includes('sales')) {
+      if (result.sql.toLowerCase().includes('sales') || result.sql.toLowerCase().includes('satış')) {
         setActiveDataset("sales");
-      } else if (result.sql.toLowerCase().includes('revenue') || result.sql.toLowerCase().includes('product')) {
+      } else if (result.sql.toLowerCase().includes('revenue') || result.sql.toLowerCase().includes('product') || 
+                result.sql.toLowerCase().includes('gelir') || result.sql.toLowerCase().includes('ürün')) {
         setActiveDataset("revenue");
       } else {
         setActiveDataset("default");
       }
       
       toast({
-        title: "SQL generated",
-        description: "SQL query generated from your description.",
+        title: "SQL oluşturuldu",
+        description: "Açıklamanızdan SQL sorgusu oluşturuldu.",
       });
     } catch (error) {
       toast({
-        title: "Generation failed",
-        description: "Failed to generate SQL. Please try again.",
+        title: "Oluşturma başarısız",
+        description: "SQL oluşturulamadı. Lütfen tekrar deneyin.",
         variant: "destructive"
       });
     } finally {
@@ -138,18 +141,24 @@ export default function QueriesPage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Query Builder</h1>
-          <p className="text-gray-500 dark:text-gray-400">Write SQL or use AI to generate queries from natural language</p>
+          <h1 className="text-3xl font-bold mb-2">Sorgu Oluşturucu</h1>
+          <p className="text-gray-500 dark:text-gray-400">SQL yazın veya doğal dil ile sorgular oluşturmak için AI kullanın</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-4">
             <Card>
               <CardHeader className="pb-3">
-                <Tabs defaultValue="sql" className="w-full">
+                <Tabs 
+                  defaultValue="sql" 
+                  className="w-full"
+                  value={activeTab}
+                  onValueChange={setActiveTab}
+                >
                   <TabsList>
-                    <TabsTrigger value="sql">SQL Editor</TabsTrigger>
-                    <TabsTrigger value="natural">Natural Language</TabsTrigger>
+                    <TabsTrigger value="sql">SQL Editör</TabsTrigger>
+                    <TabsTrigger value="natural">Doğal Dil</TabsTrigger>
+                    <TabsTrigger value="agent">SQL Aracı</TabsTrigger>
                   </TabsList>
                   
                   <TabsContent value="sql" className="space-y-4 pt-4">
@@ -158,7 +167,7 @@ export default function QueriesPage() {
                         className="font-mono text-sm h-64 bg-gray-50 dark:bg-gray-800"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Write your SQL query here..."
+                        placeholder="SQL sorgunuzu buraya yazın..."
                       />
                     </div>
                     
@@ -168,14 +177,14 @@ export default function QueriesPage() {
                         className="gap-2"
                         onClick={handleRunQuery}
                       >
-                        <Play className="h-4 w-4" /> Run Query
+                        <Play className="h-4 w-4" /> Sorguyu Çalıştır
                       </Button>
                       <div className="space-x-2">
                         <Button variant="outline" className="gap-2">
-                          <Save className="h-4 w-4" /> Save
+                          <Save className="h-4 w-4" /> Kaydet
                         </Button>
                         <Button variant="outline" className="gap-2">
-                          <BookOpen className="h-4 w-4" /> Examples
+                          <BookOpen className="h-4 w-4" /> Örnekler
                         </Button>
                       </div>
                     </div>
@@ -187,7 +196,7 @@ export default function QueriesPage() {
                         className="h-24 bg-gray-50 dark:bg-gray-800"
                         value={naturalLanguage}
                         onChange={(e) => setNaturalLanguage(e.target.value)}
-                        placeholder="Describe what data you want in plain English... (e.g., 'Show me the most active users', 'Get sales from last month', 'Show top products by revenue')"
+                        placeholder="İstediğiniz veriyi düz Türkçe ile açıklayın... (örn: 'En aktif kullanıcıları göster', 'Geçen aydaki satışları getir', 'Gelire göre en iyi ürünleri göster')"
                       />
                     </div>
                     
@@ -198,13 +207,13 @@ export default function QueriesPage() {
                         onClick={handleGenerateSQL}
                         disabled={isGenerating}
                       >
-                        <Lightbulb className="h-4 w-4" /> {isGenerating ? 'Generating...' : 'Generate SQL'}
+                        <Lightbulb className="h-4 w-4" /> {isGenerating ? 'Oluşturuluyor...' : 'SQL Oluştur'}
                       </Button>
                     </div>
                     
                     {query && (
                       <div className="mt-4">
-                        <p className="mb-2 text-sm font-medium">Generated SQL:</p>
+                        <p className="mb-2 text-sm font-medium">Oluşturulan SQL:</p>
                         <div className="bg-muted p-3 rounded-md">
                           <pre className="text-xs whitespace-pre-wrap">{query}</pre>
                         </div>
@@ -217,6 +226,10 @@ export default function QueriesPage() {
                       </div>
                     )}
                   </TabsContent>
+                  
+                  <TabsContent value="agent" className="space-y-4 pt-4">
+                    <PromptToSqlAgent />
+                  </TabsContent>
                 </Tabs>
               </CardHeader>
             </Card>
@@ -225,8 +238,8 @@ export default function QueriesPage() {
               <Card>
                 <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
                   <div>
-                    <CardTitle className="text-lg">Query Results</CardTitle>
-                    <CardDescription>10 rows returned in 0.23s</CardDescription>
+                    <CardTitle className="text-lg">Sorgu Sonuçları</CardTitle>
+                    <CardDescription>10 satır döndürüldü (0.23s)</CardDescription>
                   </div>
                   <Button 
                     variant="ghost" 
@@ -242,18 +255,18 @@ export default function QueriesPage() {
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="bg-muted">
-                            <th className="px-4 py-2 text-left font-medium">user_id</th>
-                            <th className="px-4 py-2 text-left font-medium">name</th>
-                            <th className="px-4 py-2 text-left font-medium">email</th>
-                            <th className="px-4 py-2 text-left font-medium">signup_date</th>
+                            <th className="px-4 py-2 text-left font-medium">kullanıcı_id</th>
+                            <th className="px-4 py-2 text-left font-medium">isim</th>
+                            <th className="px-4 py-2 text-left font-medium">e-posta</th>
+                            <th className="px-4 py-2 text-left font-medium">kayıt_tarihi</th>
                           </tr>
                         </thead>
                         <tbody>
                           {Array.from({ length: 5 }).map((_, i) => (
                             <tr key={i} className="border-t">
                               <td className="px-4 py-2">{1000 + i}</td>
-                              <td className="px-4 py-2">User {i + 1}</td>
-                              <td className="px-4 py-2">user{i + 1}@example.com</td>
+                              <td className="px-4 py-2">Kullanıcı {i + 1}</td>
+                              <td className="px-4 py-2">kullanici{i + 1}@ornek.com</td>
                               <td className="px-4 py-2">2023-0{i + 1}-15</td>
                             </tr>
                           ))}
@@ -264,10 +277,10 @@ export default function QueriesPage() {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline" size="sm">
-                    Show all rows
+                    Tüm satırları göster
                   </Button>
                   <Button variant="outline" size="sm" className="gap-1">
-                    <Download className="h-3.5 w-3.5" /> Export
+                    <Download className="h-3.5 w-3.5" /> Dışa Aktar
                   </Button>
                 </CardFooter>
               </Card>
@@ -278,19 +291,19 @@ export default function QueriesPage() {
             <Card>
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">Visualization</CardTitle>
+                  <CardTitle className="text-lg">Görselleştirme</CardTitle>
                   <Tabs 
                     defaultValue={activeChart} 
                     className="w-auto"
                     onValueChange={(value) => setActiveChart(value)}
                   >
                     <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="area" className="px-3">Area</TabsTrigger>
-                      <TabsTrigger value="bar" className="px-3">Bar</TabsTrigger>
+                      <TabsTrigger value="area" className="px-3">Alan</TabsTrigger>
+                      <TabsTrigger value="bar" className="px-3">Çubuk</TabsTrigger>
                     </TabsList>
                   </Tabs>
                 </div>
-                <CardDescription>Visual representation of query results</CardDescription>
+                <CardDescription>Sorgu sonuçlarının görsel temsili</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[300px]">
@@ -314,7 +327,7 @@ export default function QueriesPage() {
                           <Area 
                             type="monotone" 
                             dataKey={activeDataset === "sales" ? "sales" : "value"} 
-                            name={activeDataset === "revenue" ? "revenue" : activeDataset === "sales" ? "sales" : "value"}
+                            name={activeDataset === "revenue" ? "gelir" : activeDataset === "sales" ? "satışlar" : "değer"}
                             stroke="var(--color-sales, #3b82f6)" 
                             fillOpacity={1} 
                             fill="url(#colorValue)" 
@@ -335,7 +348,7 @@ export default function QueriesPage() {
                           <ChartTooltip content={<ChartTooltipContent />} />
                           <Bar 
                             dataKey={activeDataset === "sales" ? "sales" : "value"} 
-                            name={activeDataset === "revenue" ? "revenue" : activeDataset === "sales" ? "sales" : "value"}
+                            name={activeDataset === "revenue" ? "gelir" : activeDataset === "sales" ? "satışlar" : "değer"}
                             fill="var(--color-sales, #3b82f6)" 
                           />
                         </BarChart>
@@ -348,8 +361,8 @@ export default function QueriesPage() {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Query History</CardTitle>
-                <CardDescription>Your recent queries</CardDescription>
+                <CardTitle className="text-lg">Sorgu Geçmişi</CardTitle>
+                <CardDescription>Son sorgularınız</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
@@ -357,20 +370,20 @@ export default function QueriesPage() {
                     <li key={i} className="text-sm border p-2 rounded hover:bg-muted cursor-pointer">
                       <p className="font-mono text-xs truncate">
                         {i === 0
-                          ? "SELECT * FROM users LIMIT 10;"
+                          ? "SELECT * FROM kullanıcılar LIMIT 10;"
                           : i === 1
-                          ? "SELECT count(*) FROM orders GROUP BY status;"
-                          : "SELECT * FROM products WHERE inventory < 10;"
+                          ? "SELECT count(*) FROM siparişler GROUP BY durum;"
+                          : "SELECT * FROM ürünler WHERE stok < 10;"
                         }
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">Executed {10 - i * 3} minutes ago</p>
+                      <p className="text-xs text-muted-foreground mt-1">{10 - i * 3} dakika önce çalıştırıldı</p>
                     </li>
                   ))}
                 </ul>
               </CardContent>
               <CardFooter>
                 <Button variant="ghost" className="w-full text-sm" size="sm">
-                  View all history
+                  Tüm geçmişi görüntüle
                 </Button>
               </CardFooter>
             </Card>

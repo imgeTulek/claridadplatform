@@ -1,6 +1,6 @@
 
-// This is a simple mock implementation of a natural language to SQL converter
-// In a real application, this would be connected to an AI service or backend API
+// Bu, doğal dil ifadelerini SQL'e çeviren basit bir simülasyon
+// Gerçek bir uygulamada, bu bir AI servisi veya backend API'ye bağlı olurdu
 
 export interface SqlGenerationResult {
   sql: string;
@@ -9,54 +9,54 @@ export interface SqlGenerationResult {
 }
 
 export async function generateSqlFromNaturalLanguage(input: string): Promise<SqlGenerationResult> {
-  // This is a mock implementation - in a real app you would call an AI service
-  // For now, we'll simulate a response based on pattern matching
+  // Bu bir simülasyon - gerçek bir uygulamada bir AI servisi çağırırdınız
+  // Şimdilik, desen eşleştirme ile basit bir yanıt simüle edeceğiz
   
   const normalizedInput = input.toLowerCase().trim();
   
-  // Very basic pattern matching for demonstration
-  if (normalizedInput.includes('user') && normalizedInput.includes('most active')) {
+  // Çok basit desen eşleştirme gösterimi
+  if (normalizedInput.includes('kullanıcı') && (normalizedInput.includes('aktif') || normalizedInput.includes('en çok'))) {
     return {
-      sql: `SELECT user_id, COUNT(*) as total_activity
-FROM user_activities
-GROUP BY user_id
-ORDER BY total_activity DESC
+      sql: `SELECT kullanıcı_id, COUNT(*) as toplam_aktivite
+FROM kullanıcı_aktiviteleri
+GROUP BY kullanıcı_id
+ORDER BY toplam_aktivite DESC
 LIMIT 10;`,
-      explanation: "This query finds the most active users based on their total activity count."
+      explanation: "Bu sorgu, toplam aktivite sayılarına göre en aktif kullanıcıları bulur."
     };
   }
   
-  if (normalizedInput.includes('sales') && normalizedInput.includes('last month')) {
+  if ((normalizedInput.includes('satış') || normalizedInput.includes('satis')) && (normalizedInput.includes('son ay') || normalizedInput.includes('geçen ay'))) {
     return {
       sql: `SELECT 
-  DATE_TRUNC('day', created_at) as day,
-  SUM(amount) as daily_sales
-FROM sales
-WHERE created_at >= CURRENT_DATE - INTERVAL '30 days'
-GROUP BY DATE_TRUNC('day', created_at)
-ORDER BY day;`,
-      explanation: "This query calculates daily sales totals from the past 30 days."
+  DATE_TRUNC('day', oluşturulma_tarihi) as gün,
+  SUM(tutar) as günlük_satış
+FROM satışlar
+WHERE oluşturulma_tarihi >= CURRENT_DATE - INTERVAL '30 days'
+GROUP BY DATE_TRUNC('day', oluşturulma_tarihi)
+ORDER BY gün;`,
+      explanation: "Bu sorgu, son 30 günün günlük satış toplamlarını hesaplar."
     };
   }
   
-  if (normalizedInput.includes('revenue') || normalizedInput.includes('product')) {
+  if (normalizedInput.includes('gelir') || normalizedInput.includes('ürün') || normalizedInput.includes('urun')) {
     return {
       sql: `SELECT 
-  p.product_name, 
-  p.category,
-  SUM(o.quantity * o.price) as revenue
-FROM products p
-JOIN order_items o ON p.product_id = o.product_id
-GROUP BY p.product_name, p.category
-ORDER BY revenue DESC
+  p.ürün_adı, 
+  p.kategori,
+  SUM(o.miktar * o.fiyat) as gelir
+FROM ürünler p
+JOIN sipariş_öğeleri o ON p.ürün_id = o.ürün_id
+GROUP BY p.ürün_adı, p.kategori
+ORDER BY gelir DESC
 LIMIT 10;`,
-      explanation: "This query shows the top 10 products by revenue."
+      explanation: "Bu sorgu, gelire göre en iyi 10 ürünü gösterir."
     };
   }
   
-  // Default response for any other input
+  // Diğer girişler için varsayılan yanıt
   return {
-    sql: `-- Generated from: "${input}"\nSELECT * FROM sample_data LIMIT 10;`,
-    explanation: "This is a simple query to preview data. Please provide more specific details for a more targeted query."
+    sql: `-- Oluşturulan: "${input}"\nSELECT * FROM örnek_veri LIMIT 10;`,
+    explanation: "Bu, verileri ön izlemek için basit bir sorgudur. Daha hedefli bir sorgu için lütfen daha spesifik ayrıntılar sağlayın."
   };
 }

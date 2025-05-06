@@ -1,3 +1,4 @@
+
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,15 +7,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Lock, User } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -37,10 +38,16 @@ export default function LoginPage() {
       setIsLoading(false);
     }, 1000);
   };
-  return <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
+  
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
-          <img src="/lovable-uploads/8640358c-121b-4061-aa82-889ed0f5c575.png" alt="Claridad Logo" className="h-16 w-auto object-contain" />
+          <img 
+            src="/lovable-uploads/8640358c-121b-4061-aa82-889ed0f5c575.png" 
+            alt="Claridad Logo" 
+            className="h-24 w-auto object-contain" 
+          />
         </div>
         
         <Card>
@@ -83,5 +90,6 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       </div>
-    </div>;
+    </div>
+  );
 }
