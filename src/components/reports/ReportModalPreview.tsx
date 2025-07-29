@@ -28,18 +28,6 @@ const mockPieData = [
 ];
 
 export function ReportModalPreview({ report }: ReportModalPreviewProps) {
-  const getStatusBadge = (status: Report['status']) => {
-    switch (status) {
-      case 'completed':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">✅ Tamamlandı</Badge>;
-      case 'in-progress':
-        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">🟡 Devam Ediyor</Badge>;
-      case 'scheduled':
-        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">🔵 Planlandı</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
 
   return (
     <ScrollArea className="h-full">
@@ -67,7 +55,7 @@ export function ReportModalPreview({ report }: ReportModalPreviewProps) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {getStatusBadge(report.status)}
+            <Badge className="bg-green-100 text-green-800 hover:bg-green-100">✅ Tamamlandı</Badge>
             <Button variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
               PDF İndir

@@ -9,102 +9,94 @@ import { ReportModalPreview } from './ReportModalPreview';
 
 interface ReportTableProps {
   reports: Report[];
-  onPreview: (report: Report) => void;
-  selectedReportId?: string;
 }
 
-const getStatusBadge = (status: Report['status']) => {
-  switch (status) {
-    case 'completed':
-      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">✅ Tamamlandı</Badge>;
-    case 'in-progress':
-      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">🟡 Devam Ediyor</Badge>;
-    case 'scheduled':
-      return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">🔵 Planlandı</Badge>;
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
-};
-
-export function ReportTable({ reports, onPreview, selectedReportId }: ReportTableProps) {
+export function ReportTable({ reports }: ReportTableProps) {
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle>Rapor Listesi</CardTitle>
+    <Card className="border-0 shadow-sm">
+      <CardHeader className="border-b bg-muted/20">
+        <CardTitle className="text-xl font-semibold">📊 Rapor Listesi</CardTitle>
+        <p className="text-sm text-muted-foreground mt-1">
+          Toplam {reports.length} rapor
+        </p>
       </CardHeader>
       <CardContent className="p-0">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Rapor Adı</TableHead>
-              <TableHead>Oluşturan</TableHead>
-              <TableHead>Tarih</TableHead>
-              <TableHead>Durum</TableHead>
-              <TableHead className="text-right">İşlemler</TableHead>
+            <TableRow className="hover:bg-transparent border-b">
+              <TableHead className="font-semibold">Rapor Adı</TableHead>
+              <TableHead className="font-semibold">Oluşturan</TableHead>
+              <TableHead className="font-semibold">Tarih</TableHead>
+              <TableHead className="font-semibold">Kategori</TableHead>
+              <TableHead className="text-right font-semibold">İşlemler</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {reports.map((report) => (
+            {reports.map((report, index) => (
               <TableRow 
                 key={report.id}
-                className={`cursor-pointer transition-colors ${
-                  selectedReportId === report.id ? 'bg-accent' : 'hover:bg-muted/50'
-                }`}
-                onClick={() => onPreview(report)}
+                className="hover:bg-muted/30 transition-colors border-b last:border-b-0"
               >
-                <TableCell className="font-medium">{report.name}</TableCell>
-                <TableCell>{report.creator}</TableCell>
-                <TableCell>{report.date}</TableCell>
-                <TableCell>{getStatusBadge(report.status)}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-1">
+                <TableCell className="font-medium py-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                    {report.name}
+                  </div>
+                </TableCell>
+                <TableCell className="py-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-xs font-medium text-primary">
+                        {report.creator.charAt(0)}
+                      </span>
+                    </div>
+                    {report.creator}
+                  </div>
+                </TableCell>
+                <TableCell className="py-4 text-muted-foreground">{report.date}</TableCell>
+                <TableCell className="py-4">
+                  <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
+                    {report.category}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right py-4">
+                  <div className="flex justify-end gap-2">
                     <Button
-                      variant="ghost"
-                      size="icon"
+                      variant="outline"
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         console.log('İndiriliyor:', report.name);
                       }}
-                      title="İndir"
+                      className="h-8"
                     >
-                      <Download className="h-4 w-4" />
+                      <Download className="h-4 w-4 mr-1" />
+                      İndir
                     </Button>
                     <Button
-                      variant="ghost"
-                      size="icon"
+                      variant="outline"
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         console.log('Paylaşılıyor:', report.name);
                       }}
-                      title="Paylaş"
+                      className="h-8"
                     >
-                      <Share className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log('Diğer işlemler:', report.name);
-                      }}
-                      title="Diğer İşlemler"
-                    >
-                      <MoreVertical className="h-4 w-4" />
+                      <Share className="h-4 w-4 mr-1" />
+                      Paylaş
                     </Button>
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          title="Ön İzle"
+                          variant="default"
+                          size="sm"
+                          className="h-8"
                         >
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-4 w-4 mr-1" />
+                          Ön İzle
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-4xl h-[85vh] overflow-hidden p-0 backdrop-blur-sm bg-background/95">
+                      <DialogContent className="max-w-5xl h-[90vh] overflow-hidden p-0">
                         <ReportModalPreview report={report} />
                       </DialogContent>
                     </Dialog>
