@@ -12,6 +12,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ConnectionsPage from "./pages/ConnectionsPage";
 import ImportPage from "./pages/ImportPage";
 import QueriesPage from "./pages/QueriesPage";
+import ReportsPage from "./pages/ReportsPage";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 
@@ -65,6 +66,12 @@ const App = () => (
               <Route path="/queries" element={
                 <ProtectedRoute>
                   <QueriesPage />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/reports" element={
+                <ProtectedRoute>
+                  <ReportsPage />
                 </ProtectedRoute>
               } />
               
