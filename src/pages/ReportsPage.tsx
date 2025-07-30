@@ -1,5 +1,9 @@
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ReportTable } from '@/components/reports/ReportTable';
+import { CreateReportModal } from '@/components/reports/CreateReportModal';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
 
 export interface Report {
   id: string;
@@ -58,19 +62,32 @@ const mockReports: Report[] = [
 ];
 
 export default function ReportsPage() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   return (
     <MainLayout>
       <div className="h-full flex flex-col space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Raporlar</h1>
-          <p className="text-muted-foreground">
-            Oluşturulan raporları görüntüleyin, indirin ve paylaşın
-          </p>
+        <div className="flex justify-between items-start">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Raporlar</h1>
+            <p className="text-muted-foreground">
+              Oluşturulan raporları görüntüleyin, indirin ve paylaşın
+            </p>
+          </div>
+          <Button onClick={() => setIsCreateModalOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Yeni Rapor Oluştur
+          </Button>
         </div>
         
         <div className="flex-1">
           <ReportTable reports={mockReports} />
         </div>
+
+        <CreateReportModal 
+          open={isCreateModalOpen} 
+          onOpenChange={setIsCreateModalOpen} 
+        />
       </div>
     </MainLayout>
   );
