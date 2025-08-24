@@ -229,7 +229,21 @@ export default function ImportPage() {
 
                 {uploadedFiles.length > 0 && (
                   <div className="mt-6 space-y-4">
-                    <h4 className="font-medium">Yüklenen Dosyalar</h4>
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">Yüklenen Dosyalar</h4>
+                      <Button 
+                        onClick={() => {
+                          toast({
+                            title: "Dosyalar yükleniyor",
+                            description: "Tüm dosyalar sisteme yükleniyor..."
+                          });
+                        }}
+                        className="gap-2"
+                      >
+                        <Upload className="h-4 w-4" />
+                        Tümünü Yükle
+                      </Button>
+                    </div>
                     {uploadedFiles.map((file) => (
                       <Card key={file.id} className="p-4">
                         <div className="flex items-center justify-between mb-3">
