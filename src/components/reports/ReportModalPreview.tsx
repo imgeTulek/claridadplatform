@@ -12,19 +12,19 @@ interface ReportModalPreviewProps {
 }
 
 const mockChartData = [
-  { name: 'Ocak', value: 12500, growth: 8.5 },
-  { name: 'Şubat', value: 8750, growth: -12.3 },
-  { name: 'Mart', value: 15200, growth: 18.7 },
-  { name: 'Nisan', value: 11800, growth: -5.2 },
-  { name: 'Mayıs', value: 16800, growth: 22.1 },
-  { name: 'Haziran', value: 14300, growth: 8.9 },
+  { name: '1 Eyl', value: 1125, growth: 8.5 },
+  { name: '2 Eyl', value: 1040, growth: -7.6 },
+  { name: '3 Eyl', value: 980, growth: -5.8 },
+  { name: '4 Eyl', value: 1125, growth: 14.8 },
+  { name: '5 Eyl', value: 1200, growth: 6.7 },
+  { name: '6 Eyl', value: 1080, growth: -10.0 },
+  { name: '7 Eyl', value: 1250, growth: 15.7 },
 ];
 
 const mockPieData = [
-  { name: 'İstanbul', value: 35, color: 'hsl(var(--primary))' },
-  { name: 'Ankara', value: 25, color: 'hsl(var(--accent))' },
-  { name: 'İzmir', value: 20, color: 'hsl(var(--secondary))' },
-  { name: 'Diğer', value: 20, color: 'hsl(var(--muted))' },
+  { name: 'HAT-1', value: 45, color: 'hsl(var(--primary))' },
+  { name: 'HAT-2', value: 35, color: 'hsl(var(--accent))' },
+  { name: 'HAT-3', value: 20, color: 'hsl(var(--secondary))' },
 ];
 
 export function ReportModalPreview({ report }: ReportModalPreviewProps) {
@@ -83,17 +83,17 @@ export function ReportModalPreview({ report }: ReportModalPreviewProps) {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex justify-between items-center p-3 bg-primary/5 rounded-lg">
-                    <span className="text-sm font-medium text-muted-foreground">Toplam Satışlar</span>
+                    <span className="text-sm font-medium text-muted-foreground">Toplam Üretim</span>
                     <span className="text-lg font-bold text-primary">{report.summary.sales}</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                    <span className="text-sm font-medium text-muted-foreground">Büyüme Oranı</span>
+                    <span className="text-sm font-medium text-muted-foreground">OEE / Kalite</span>
                     <span className="text-lg font-bold text-green-600">{report.summary.growth}</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-accent/10 rounded-lg">
                     <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
                       <MapPin className="h-4 w-4" />
-                      En Çok Satış
+                      Hat / Hurda Durumu
                     </span>
                     <span className="text-lg font-bold text-accent">{report.summary.topLocation}</span>
                   </div>
@@ -104,7 +104,7 @@ export function ReportModalPreview({ report }: ReportModalPreviewProps) {
             {/* Location Distribution */}
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg">Bölgesel Dağılım</CardTitle>
+                <CardTitle className="text-lg">Hat Bazlı Üretim</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-48">
@@ -148,7 +148,7 @@ export function ReportModalPreview({ report }: ReportModalPreviewProps) {
             {/* Main Chart */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Aylık Satış Trendi</CardTitle>
+                <CardTitle className="text-lg">Günlük Üretim Trendi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -170,7 +170,7 @@ export function ReportModalPreview({ report }: ReportModalPreviewProps) {
                           border: '1px solid hsl(var(--border))',
                           borderRadius: '8px'
                         }}
-                        formatter={(value) => [`${value}₺`, 'Satış']}
+                        formatter={(value) => [`${value} adet`, 'Üretim']}
                       />
                       <Bar 
                         dataKey="value" 
@@ -186,7 +186,7 @@ export function ReportModalPreview({ report }: ReportModalPreviewProps) {
             {/* Growth Chart */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Büyüme Oranı Trendi</CardTitle>
+                <CardTitle className="text-lg">Verimlilik Trendi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-48">
@@ -208,7 +208,7 @@ export function ReportModalPreview({ report }: ReportModalPreviewProps) {
                           border: '1px solid hsl(var(--border))',
                           borderRadius: '8px'
                         }}
-                        formatter={(value) => [`%${value}`, 'Büyüme']}
+                        formatter={(value) => [`%${value}`, 'Verimlilik']}
                       />
                       <Line 
                         type="monotone" 
@@ -234,8 +234,9 @@ export function ReportModalPreview({ report }: ReportModalPreviewProps) {
                 </p>
                 <div className="mt-4 p-4 bg-muted/30 rounded-lg">
                   <p className="text-sm text-muted-foreground">
-                    Bu rapor otomatik olarak oluşturulmuş olup, veriler gerçek zamanlı sistemlerden 
-                    alınmaktadır. Grafiklerdeki trendler son 6 aylık performansı göstermektedir.
+                    Bu rapor otomatik olarak oluşturulmuş olup, veriler gerçek zamanlı üretim sistemlerden 
+                    alınmaktadır. Grafiklerdeki trendler günlük üretim performansını, OEE metriklerini ve 
+                    kalite göstergelerini kapsamaktadır.
                   </p>
                 </div>
               </CardContent>
