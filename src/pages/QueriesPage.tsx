@@ -19,8 +19,8 @@ export default function QueriesPage() {
     <MainLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Sorgu Oluşturucu</h1>
-          <p className="text-muted-foreground">Doğal dil ile sorgular oluşturmak için AI kullanın</p>
+          <h1 className="text-3xl font-bold mb-2">Üretim Sorgu Oluşturucu</h1>
+          <p className="text-muted-foreground">Üretim verilerinizi analiz etmek için doğal dil kullanın</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

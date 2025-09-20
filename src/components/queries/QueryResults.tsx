@@ -32,19 +32,21 @@ export const QueryResults = ({ showResults, setShowResults }: QueryResultsProps)
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-muted">
-                  <th className="px-4 py-2 text-left font-medium">kullanıcı_id</th>
-                  <th className="px-4 py-2 text-left font-medium">isim</th>
-                  <th className="px-4 py-2 text-left font-medium">e-posta</th>
-                  <th className="px-4 py-2 text-left font-medium">kayıt_tarihi</th>
+                  <th className="px-4 py-2 text-left font-medium">hat_id</th>
+                  <th className="px-4 py-2 text-left font-medium">vardiya</th>
+                  <th className="px-4 py-2 text-left font-medium">uretim_adedi</th>
+                  <th className="px-4 py-2 text-left font-medium">oee</th>
+                  <th className="px-4 py-2 text-left font-medium">tarih</th>
                 </tr>
               </thead>
               <tbody>
                 {Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i} className="border-t">
-                    <td className="px-4 py-2">{1000 + i}</td>
-                    <td className="px-4 py-2">Kullanıcı {i + 1}</td>
-                    <td className="px-4 py-2">kullanici{i + 1}@ornek.com</td>
-                    <td className="px-4 py-2">2023-0{i + 1}-15</td>
+                    <td className="px-4 py-2">HAT-{i % 2 + 1}</td>
+                    <td className="px-4 py-2">V{(i % 3) + 1}</td>
+                    <td className="px-4 py-2">{1000 + i * 50} adet</td>
+                    <td className="px-4 py-2">%{75 + i * 2}.{i}</td>
+                    <td className="px-4 py-2">2025-09-0{i + 1}</td>
                   </tr>
                 ))}
               </tbody>

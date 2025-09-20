@@ -46,11 +46,14 @@ export const NaturalLanguageInput = ({
       setGeneratedSqlExplanation(result.explanation || "");
       
       // Set active dataset based on the query content
-      if (result.sql.toLowerCase().includes('sales') || result.sql.toLowerCase().includes('satış')) {
-        setActiveDataset("sales");
-      } else if (result.sql.toLowerCase().includes('revenue') || result.sql.toLowerCase().includes('product') || 
-                result.sql.toLowerCase().includes('gelir') || result.sql.toLowerCase().includes('ürün')) {
-        setActiveDataset("revenue");
+      if (result.sql.toLowerCase().includes('üretim') || result.sql.toLowerCase().includes('production') || result.sql.toLowerCase().includes('adet')) {
+        setActiveDataset("production");
+      } else if (result.sql.toLowerCase().includes('oee') || result.sql.toLowerCase().includes('verimlilik') || 
+                result.sql.toLowerCase().includes('vardiya') || result.sql.toLowerCase().includes('shift')) {
+        setActiveDataset("oee");
+      } else if (result.sql.toLowerCase().includes('hurda') || result.sql.toLowerCase().includes('scrap') || 
+                result.sql.toLowerCase().includes('kalite') || result.sql.toLowerCase().includes('quality')) {
+        setActiveDataset("quality");
       } else {
         setActiveDataset("default");
       }
@@ -77,7 +80,7 @@ export const NaturalLanguageInput = ({
           className="h-24 bg-gray-50 dark:bg-gray-800"
           value={naturalLanguage}
           onChange={(e) => setNaturalLanguage(e.target.value)}
-          placeholder="İstediğiniz veriyi düz Türkçe ile açıklayın... (örn: 'En aktif kullanıcıları göster', 'Geçen aydaki satışları getir', 'Gelire göre en iyi ürünleri göster')"
+          placeholder="Üretim verilerinizi analiz etmek istediğiniz şekilde açıklayın... (örn: 'HAT-1 günlük üretim miktarlarını göster', 'V2 vardiyasının OEE verilerini getir', 'En çok hurda veren makineyi bul')"
         />
       </div>
       

@@ -9,48 +9,60 @@ import {
   ChartTooltipContent
 } from '@/components/ui/chart';
 
-// Sample data for different visualizations
-const sampleData = [
-  { name: 'Oca', value: 400 },
-  { name: 'Şub', value: 300 },
-  { name: 'Mar', value: 600 },
-  { name: 'Nis', value: 800 },
-  { name: 'May', value: 500 },
-  { name: 'Haz', value: 900 },
-  { name: 'Tem', value: 1000 },
+// Production-focused sample data
+const defaultProductionData = [
+  { name: '01 Eyl', value: 920 },
+  { name: '02 Eyl', value: 1040 },
+  { name: '03 Eyl', value: 980 },
+  { name: '04 Eyl', value: 1125 },
+  { name: '05 Eyl', value: 1200 },
+  { name: '06 Eyl', value: 1080 },
+  { name: '07 Eyl', value: 1250 },
 ];
 
-const dailySalesData = [
-  { day: '01/01', sales: 120 },
-  { day: '01/02', sales: 180 },
-  { day: '01/03', sales: 250 },
-  { day: '01/04', sales: 300 },
-  { day: '01/05', sales: 280 },
-  { day: '01/06', sales: 220 },
-  { day: '01/07', sales: 170 },
+const dailyProductionData = [
+  { day: '01/09', production: 920 },
+  { day: '02/09', production: 1040 },
+  { day: '03/09', production: 980 },
+  { day: '04/09', production: 1125 },
+  { day: '05/09', production: 1200 },
+  { day: '06/09', production: 1080 },
+  { day: '07/09', production: 1250 },
 ];
 
-const productRevenueData = [
-  { name: 'Ürün A', value: 12000 },
-  { name: 'Ürün B', value: 8000 },
-  { name: 'Ürün C', value: 15000 },
-  { name: 'Ürün D', value: 6000 },
-  { name: 'Ürün E', value: 9000 },
+const oeeByShiftData = [
+  { name: 'V1', value: 76 },
+  { name: 'V2', value: 81 },
+  { name: 'V3', value: 73 },
+];
+
+const scrapReasonsData = [
+  { name: 'Boyutsal Hata', value: 420 },
+  { name: 'Yüzey Kusuru', value: 260 },
+  { name: 'Montaj Hatası', value: 180 },
+  { name: 'Hammadde', value: 140 },
 ];
 
 const chartConfig = {
-  sales: {
-    label: 'Satışlar',
+  production: {
+    label: 'Üretim',
     theme: {
       light: '#3b82f6',
       dark: '#60a5fa',
     },
   },
-  revenue: {
-    label: 'Gelir',
+  oee: {
+    label: 'OEE',
     theme: {
       light: '#10b981',
       dark: '#34d399',
+    },
+  },
+  quality: {
+    label: 'Kalite',
+    theme: {
+      light: '#f59e0b',
+      dark: '#fbbf24',
     },
   },
 };
@@ -67,12 +79,14 @@ export const QueryVisualization = ({ activeDataset }: QueryVisualizationProps) =
   // Get the appropriate data for visualization based on the active dataset
   const getVisualizationData = () => {
     switch (activeDataset) {
-      case "sales":
-        return dailySalesData;
-      case "revenue":
-        return productRevenueData;
+      case "production":
+        return dailyProductionData;
+      case "oee":
+        return oeeByShiftData;
+      case "quality":
+        return scrapReasonsData;
       default:
-        return sampleData;
+        return defaultProductionData;
     }
   };
 
@@ -110,15 +124,15 @@ export const QueryVisualization = ({ activeDataset }: QueryVisualizationProps) =
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
-                    dataKey={activeDataset === "sales" ? "day" : "name"} 
+                    dataKey={activeDataset === "production" ? "day" : "name"} 
                     tick={{ fill: 'var(--color-foreground)' }} 
                   />
                   <YAxis tick={{ fill: 'var(--color-foreground)' }} />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Area 
                     type="monotone" 
-                    dataKey={activeDataset === "sales" ? "sales" : "value"} 
-                    name={activeDataset === "revenue" ? "gelir" : activeDataset === "sales" ? "satışlar" : "değer"}
+                    dataKey={activeDataset === "production" ? "production" : "value"} 
+                    name={activeDataset === "production" ? "üretim" : activeDataset === "oee" ? "oee" : activeDataset === "quality" ? "hurda" : "değer"}
                     stroke="var(--color-sales, #3b82f6)" 
                     fillOpacity={1} 
                     fill="url(#colorValue)" 
@@ -134,14 +148,14 @@ export const QueryVisualization = ({ activeDataset }: QueryVisualizationProps) =
                 <BarChart data={getVisualizationData()} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
-                    dataKey={activeDataset === "sales" ? "day" : "name"} 
+                    dataKey={activeDataset === "production" ? "day" : "name"} 
                     tick={{ fill: 'var(--color-foreground)' }} 
                   />
                   <YAxis tick={{ fill: 'var(--color-foreground)' }} />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Bar 
-                    dataKey={activeDataset === "sales" ? "sales" : "value"} 
-                    name={activeDataset === "revenue" ? "gelir" : activeDataset === "sales" ? "satışlar" : "değer"}
+                    dataKey={activeDataset === "production" ? "production" : "value"} 
+                    name={activeDataset === "production" ? "üretim" : activeDataset === "oee" ? "oee" : activeDataset === "quality" ? "hurda" : "değer"}
                     fill="var(--color-sales, #3b82f6)" 
                   />
                 </BarChart>
@@ -155,15 +169,15 @@ export const QueryVisualization = ({ activeDataset }: QueryVisualizationProps) =
                 <LineChart data={getVisualizationData()} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
-                    dataKey={activeDataset === "sales" ? "day" : "name"} 
+                    dataKey={activeDataset === "production" ? "day" : "name"} 
                     tick={{ fill: 'var(--color-foreground)' }} 
                   />
                   <YAxis tick={{ fill: 'var(--color-foreground)' }} />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Line 
                     type="monotone" 
-                    dataKey={activeDataset === "sales" ? "sales" : "value"} 
-                    name={activeDataset === "revenue" ? "gelir" : activeDataset === "sales" ? "satışlar" : "değer"}
+                    dataKey={activeDataset === "production" ? "production" : "value"} 
+                    name={activeDataset === "production" ? "üretim" : activeDataset === "oee" ? "oee" : activeDataset === "quality" ? "hurda" : "değer"}
                     stroke="var(--color-sales, #3b82f6)" 
                     strokeWidth={2}
                     dot={{ fill: "var(--color-sales, #3b82f6)" }}
@@ -185,7 +199,7 @@ export const QueryVisualization = ({ activeDataset }: QueryVisualizationProps) =
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     outerRadius={80}
                     fill="#8884d8"
-                    dataKey={activeDataset === "sales" ? "sales" : "value"}
+                    dataKey={activeDataset === "production" ? "production" : "value"}
                   >
                     {getVisualizationData().map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
