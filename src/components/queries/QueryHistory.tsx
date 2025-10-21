@@ -13,12 +13,12 @@ export const QueryHistory = () => {
         <ul className="space-y-2">
           {Array.from({ length: 3 }).map((_, i) => (
             <li key={i} className="text-sm border p-2 rounded hover:bg-muted cursor-pointer">
-              <p className="font-mono text-xs truncate">
+              <p className="text-xs">
                 {i === 0
-                  ? "SELECT hat_id, SUM(uretim_adedi) FROM uretim WHERE tarih >= '2025-09-01' GROUP BY hat_id;"
+                  ? "Eylül ayından itibaren tüm hatların toplam üretim miktarlarını göster"
                   : i === 1
-                  ? "SELECT vardiya, AVG(oee) FROM vardiya_metrikleri WHERE hat_id = 'HAT-1';"
-                  : "SELECT hurda_nedeni, COUNT(*) FROM kalite_kontrol WHERE hurda = true GROUP BY hurda_nedeni;"
+                  ? "HAT-1 için vardiya bazlı ortalama OEE değerlerini listele"
+                  : "Hurda nedeni bazında kalite kontrol sonuçlarını grupla"
                 }
               </p>
               <p className="text-xs text-muted-foreground mt-1">{10 - i * 3} dakika önce çalıştırıldı</p>

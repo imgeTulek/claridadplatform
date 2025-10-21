@@ -60,9 +60,9 @@ export const QueryAnalysisModal = ({ open, onOpenChange, queryText }: QueryAnaly
               <CardTitle className="text-lg">Analiz Edilen Sorgu</CardTitle>
             </CardHeader>
             <CardContent>
-              <code className="text-sm bg-muted p-3 rounded block overflow-x-auto">
-                {queryText || "SELECT hat_id, vardiya, SUM(uretim_adedi) as toplam_uretim, AVG(oee) as ortalama_oee FROM uretim WHERE tarih >= '2025-09-01' GROUP BY hat_id, vardiya"}
-              </code>
+              <div className="text-sm bg-muted p-3 rounded">
+                {queryText || "HAT-1 ve HAT-2 için günlük üretim miktarlarını ve OEE değerlerini göster"}
+              </div>
             </CardContent>
           </Card>
 

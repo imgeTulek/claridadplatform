@@ -91,7 +91,7 @@ export const NaturalLanguageInput = ({
           onClick={handleGenerateSQL}
           disabled={isGenerating}
         >
-          <Lightbulb className="h-4 w-4" /> {isGenerating ? 'Oluşturuluyor...' : 'SQL Oluştur'}
+          <Lightbulb className="h-4 w-4" /> {isGenerating ? 'Sorgulanıyor...' : 'Sorgula'}
         </Button>
       </div>
       

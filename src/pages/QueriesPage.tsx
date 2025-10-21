@@ -4,7 +4,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { Card, CardHeader } from '@/components/ui/card';
 import { NaturalLanguageInput } from '@/components/queries/NaturalLanguageInput';
 import { QueryResults } from '@/components/queries/QueryResults';
-import { QueryVisualization } from '@/components/queries/QueryVisualization';
+
 import { QueryHistory } from '@/components/queries/QueryHistory';
 import { GeneratedSqlExplanation } from '@/components/queries/GeneratedSqlExplanation';
 import { QueryAnalysisModal } from '@/components/queries/QueryAnalysisModal';
@@ -51,7 +51,6 @@ export default function QueriesPage() {
           </div>
           
           <div className="space-y-4">
-            <QueryVisualization activeDataset={activeDataset} />
             <QueryHistory />
           </div>
         </div>
@@ -60,7 +59,7 @@ export default function QueriesPage() {
       <QueryAnalysisModal 
         open={showAnalysisModal}
         onOpenChange={setShowAnalysisModal}
-        queryText={query}
+        queryText={naturalLanguage}
       />
     </MainLayout>
   );
