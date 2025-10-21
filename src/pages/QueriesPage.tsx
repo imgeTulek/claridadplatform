@@ -7,6 +7,7 @@ import { QueryResults } from '@/components/queries/QueryResults';
 import { QueryVisualization } from '@/components/queries/QueryVisualization';
 import { QueryHistory } from '@/components/queries/QueryHistory';
 import { GeneratedSqlExplanation } from '@/components/queries/GeneratedSqlExplanation';
+import { QueryAnalysisModal } from '@/components/queries/QueryAnalysisModal';
 
 export default function QueriesPage() {
   const [query, setQuery] = useState("");
@@ -14,6 +15,7 @@ export default function QueriesPage() {
   const [showResults, setShowResults] = useState(true);
   const [generatedSqlExplanation, setGeneratedSqlExplanation] = useState("");
   const [activeDataset, setActiveDataset] = useState("default");
+  const [showAnalysisModal, setShowAnalysisModal] = useState(false);
   
   return (
     <MainLayout>
@@ -41,7 +43,11 @@ export default function QueriesPage() {
               </CardHeader>
             </Card>
             
-            <QueryResults showResults={showResults} setShowResults={setShowResults} />
+            <QueryResults 
+              showResults={showResults} 
+              setShowResults={setShowResults}
+              onGenerateReport={() => setShowAnalysisModal(true)}
+            />
           </div>
           
           <div className="space-y-4">
@@ -50,6 +56,12 @@ export default function QueriesPage() {
           </div>
         </div>
       </div>
+
+      <QueryAnalysisModal 
+        open={showAnalysisModal}
+        onOpenChange={setShowAnalysisModal}
+        queryText={query}
+      />
     </MainLayout>
   );
 }

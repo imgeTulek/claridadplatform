@@ -1,14 +1,15 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from '@/components/ui/card';
-import { ChevronsDown, Download } from 'lucide-react';
+import { ChevronsDown, Download, FileText } from 'lucide-react';
 
 interface QueryResultsProps {
   showResults: boolean;
   setShowResults: (show: boolean) => void;
+  onGenerateReport: () => void;
 }
 
-export const QueryResults = ({ showResults, setShowResults }: QueryResultsProps) => {
+export const QueryResults = ({ showResults, setShowResults, onGenerateReport }: QueryResultsProps) => {
   if (!showResults) return null;
 
   return (
@@ -55,9 +56,19 @@ export const QueryResults = ({ showResults, setShowResults }: QueryResultsProps)
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" size="sm">
-          Tüm satırları göster
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm">
+            Tüm satırları göster
+          </Button>
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="gap-1"
+            onClick={onGenerateReport}
+          >
+            <FileText className="h-3.5 w-3.5" /> Rapora Dönüştür
+          </Button>
+        </div>
         <Button variant="outline" size="sm" className="gap-1">
           <Download className="h-3.5 w-3.5" /> Dışa Aktar
         </Button>
